@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/black_background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    
+	<ImageView 
+	    android:id="@+id/photoView" 
+	    android:background="#ffcecece" 
+	    android:layout_width="match_parent" 
+	    android:layout_height="10.0dip" 
+	    android:layout_centerInParent="true" />
+	
+    <RelativeLayout 
+        android:visibility="gone" 
+        android:layout_alignParentBottom="true" 
+        style="@style/navigation">
+        <ImageButton 
+            android:id="@+id/rotateLeftBtn" 
+            android:background="@null" 
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content" 
+            android:layout_marginLeft="12.0dip" 
+            android:src="@drawable/rotate_left" 
+            android:layout_centerVertical="true" 
+            android:onClick="rotateLeft" />
+        <ImageButton 
+            android:id="@+id/RotateRightBtn" 
+            android:background="@null" 
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content" 
+            android:layout_marginRight="12.0dip" 
+            android:src="@drawable/rotate_right" 
+            android:layout_alignParentRight="true" 
+            android:layout_centerVertical="true" 
+            android:onClick="rotateRight" />
+    </RelativeLayout>
+	
+</RelativeLayout>

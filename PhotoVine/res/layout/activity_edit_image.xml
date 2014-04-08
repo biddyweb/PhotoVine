@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    
+	<LinearLayout 
+        android:orientation="vertical"
+        android:background="@color/black_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+	
+	    <org.askerov.dynamicgid.DynamicGridView
+	            android:id="@+id/dynamic_grid"
+	            android:layout_height="match_parent"
+	            android:layout_width="match_parent"
+	            android:numColumns="3"
+	            />
+	
+	</LinearLayout>
+	
+	<LinearLayout 
+	    android:id="@+id/layoutToolBar" 
+	    android:background="@drawable/title_bg" 
+	    android:layout_width="match_parent"
+	    android:layout_height="48.0dp"
+	    android:visibility="gone" 
+	    android:orientation="horizontal"
+	    android:layout_alignParentBottom="true">
+	    
+	     <ImageButton 
+	         android:id="@+id/btn_delete" 
+	         android:background="@null" 
+	         android:layout_weight="1"
+	         android:layout_width="0dp" 
+	         android:layout_height="match_parent" 
+	         android:src="@drawable/ic_content_discard" 
+	         android:layout_gravity="center" 
+	         android:onClick="deleteImage" />
+	     
+        <ImageButton
+            android:id="@+id/btn_copy" 
+            android:background="@null" 
+            android:layout_weight="1"
+	        android:layout_width="0dp" 
+	        android:layout_height="match_parent" 
+            android:src="@drawable/ic_content_copy" 
+            android:layout_gravity="center" 
+            android:onClick="copyImage" />
+        
+        <ImageButton 
+            android:id="@+id/btn_crop" 
+            android:background="@null" 
+            android:layout_weight="1"
+	        android:layout_width="0dp" 
+	        android:layout_height="match_parent" 
+            android:src="@drawable/ic_images_crop" 
+            android:layout_gravity="center" 
+            android:onClick="cropImage" />
+	    
+	</LinearLayout>
+	
+</RelativeLayout>
