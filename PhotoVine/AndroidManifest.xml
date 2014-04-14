@@ -8,19 +8,40 @@
         android:minSdkVersion="10"
         android:targetSdkVersion="18" />
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"></uses-permission>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"></uses-permission>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    
     <application
+        android:name=".activity.SlideshowApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:label="@string/app_name" 
+        android:theme="@style/Theme.PhotoVine.NoActionBar">
         <activity
-            android:name="com.brennan.photovine.WelcomeActivity"
-            android:label="@string/app_name" >
+            android:name=".activity.ChooseImageActivity"
+            android:label="@string/app_name" 
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        
+        <activity 
+            android:name=".activity.EditImageActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+            
+        </activity>
+        
+        <activity 
+            android:name=".activity.CropImageActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+            
         </activity>
     </application>
 

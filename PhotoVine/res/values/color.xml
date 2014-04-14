@@ -1,0 +1,17 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <color name="black_background">#000000</color>
+	<color name="yellow">#EEEE00</color>
+	<color name="bar_background">#00FF7F</color>
+	<color name="no_item">#333333</color>
+	<color name="text_color">#fff2f2f2</color>
+	<color name="none_color">#00000000</color>
+	
+	<color name="photo_placeholder_bg_color0">#5F9FDF</color>
+    <color name="photo_placeholder_bg_color1">#6FCF6E</color>
+    <color name="photo_placeholder_bg_color2">#EF5F5F</color>
+    <color name="photo_placeholder_bg_color3">#FFD716</color>
+    <color name="photo_placeholder_bg_color4">#975F97</color>
+    <color name="photo_placeholder_bg_color5">#FFBF57</color>
+</resources>

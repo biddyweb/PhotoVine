@@ -1,0 +1,9 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"  >
+    
+    <item 
+        android:id="@+id/goahead"
+        android:showAsAction="always"
+        android:title="@string/hello_world"
+        android:icon="@drawable/btn_back_pressed"/>
+
+</menu>

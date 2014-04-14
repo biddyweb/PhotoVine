@@ -1,0 +1,11 @@
+<resources>
+
+    <array name="photo_placeholder_bg_color">
+        <item>@color/photo_placeholder_bg_color0</item>
+        <item>@color/photo_placeholder_bg_color1</item>
+        <item>@color/photo_placeholder_bg_color2</item>
+        <item>@color/photo_placeholder_bg_color3</item>
+        <item>@color/photo_placeholder_bg_color4</item>
+        <item>@color/photo_placeholder_bg_color5</item>
+    </array>
+</resources>

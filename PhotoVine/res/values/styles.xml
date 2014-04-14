@@ -17,4 +17,20 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
+    <style name="navigation">
+        <item name="android:background">@drawable/title_bg</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">48.0dip</item>
+    </style>
+   
+    <style name="navigation_txt">
+        <item name="android:textSize">@dimen/text_size</item>
+        <item name="android:textColor">@color/text_color</item>
+    </style>
+    
+    <style name="navigation_title" parent="@style/navigation_txt">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerInParent">true</item>
+    </style>
 </resources>

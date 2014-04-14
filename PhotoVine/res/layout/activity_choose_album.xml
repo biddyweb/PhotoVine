@@ -1,0 +1,46 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/black_background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+	<include 
+	    android:id="@+id/navigation"
+	    style="@style/navigation"
+	    layout="@layout/activity_navigation"/>
+	
+    <GridView
+        android:id="@+id/main_grid"	
+        android:layout_below="@id/navigation"
+        android:paddingRight="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:listSelector="@android:color/transparent"
+        android:cacheColorHint="@android:color/transparent"
+        android:gravity="center"
+        android:stretchMode="spacingWidthUniform"
+        android:horizontalSpacing="10dip"
+        android:verticalSpacing="5dip"
+        android:columnWidth="90dip"
+        android:numColumns="auto_fit" >
+    </GridView>
+    
+    <GridView
+        android:id="@+id/child_grid"
+        android:background="@android:color/black"
+        android:layout_marginTop="@dimen/imagegridview_spacing"
+        android:layout_below="@id/navigation"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:listSelector="@android:color/transparent"
+        android:cacheColorHint="@android:color/transparent"
+        android:horizontalSpacing="@dimen/imagegridview_spacing"
+        android:verticalSpacing="@dimen/imagegridview_spacing"
+        android:gravity="center"
+        android:stretchMode="columnWidth"
+        android:columnWidth="90dip"
+        android:numColumns="auto_fit" 
+        android:visibility="gone">
+    </GridView>
+
+</RelativeLayout>
