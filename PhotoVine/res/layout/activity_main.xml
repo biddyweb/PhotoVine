@@ -9,15 +9,15 @@
         android:id="@+id/ibChoosePhoto"
         android:layout_width="fill_parent"
         android:layout_height="395dp"
-        android:scaleType="center"
-        android:src="@drawable/orange" />
+        android:scaleType="centerCrop"
+        android:src="@drawable/wa_a01" />
     
     <ImageView
         android:id="@+id/ibViewSlideShow"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@id/ibChoosePhoto"
-        android:scaleType="fitXY"
-        android:src="@drawable/red" />
+        android:scaleType="centerCrop"
+        android:src="@drawable/wa_b02" />
 
 </RelativeLayout>
