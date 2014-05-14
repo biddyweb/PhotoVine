@@ -11,13 +11,17 @@ import org.ffmpeg.android.FfmpegController;
 import org.ffmpeg.android.ShellUtils.ShellCallback;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 
+import com.brennan_hzl.photovine.activity.EditSlideShowActivity;
 import com.brennan_hzl.photovine.bean.ImageBean;
 import com.brennan_hzl.photovine.bean.MusicBean;
+import com.brennan_hzl.photovine.fragment.MakeProgressFragment;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
 
 
@@ -39,18 +43,17 @@ public class SlideShowMaker {
 	private String musicStartTime;
 	private Context mContext;
 	private FfmpegController mFfmpegController;
+	private MakeProgressFragment progressFragment;
 	
 	public SlideShowMaker(Context context, List<ImageBean> images) {
 		mContext = context;
 		mImages = images;
-		videoPath = StoreDataUtil.getPathOfStoreSlideShow(context).getAbsolutePath()+File.separator+"hello.mp4";
-		frontFile = new File(StoreDataUtil.getPathOfStoreSlideShow(context).getAbsolutePath()+File.separator+"Aller_Lt.ttf");
 		initFfmpeg();
 	}
 	
 	private void initFfmpeg() {
 		try {
-			mFfmpegController = new FfmpegController(mContext, StoreDataUtil.getTempPathOfAppInternalStorage(mContext),frontFile);
+			mFfmpegController = new FfmpegController(mContext, StoreDataUtil.getTempPathOfAppInternalStorage(mContext));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -87,7 +90,11 @@ public class SlideShowMaker {
 		return clips;
 	}
 	
-	public void createSlideShow() {
+	public void createSlideShow(String videoPath, int shareType) {
+		this.videoPath = videoPath;
+		progressFragment = MakeProgressFragment.createFragment(videoPath, shareType);
+		progressFragment.show(((EditSlideShowActivity)mContext).getSupportFragmentManager(), "makeSlidshow");
+		
 		ArrayList<Clip> images = new ArrayList<Clip>();
 		for (ImageBean value : mImages) {
 			Clip image = new Clip(value.imagePath);
@@ -96,7 +103,7 @@ public class SlideShowMaker {
 		if (StoreDataUtil.getPathOfStoreSlideShow(mContext) == null)
 			return;
 		Clip out = new Clip(videoPath);
-		Clip audio;
+		Clip audio = null;
 		if (music != null) {
 			audio = new Clip(music.getUrl());
 			audio.startTime = musicStartTime;
@@ -106,7 +113,7 @@ public class SlideShowMaker {
 		out.height = height;
 		//out.qscale = "5";
 		if (mFfmpegController != null) {
-			new CreateSlideShowAsyncTask().execute(images,null,out,durationPerImage);
+			new CreateSlideShowAsyncTask().execute(images, audio, out, Watermask, durationPerImage);
 		}
 	}
 	
@@ -118,9 +125,11 @@ public class SlideShowMaker {
 			ArrayList<Clip> images = (ArrayList<Clip>) params[0];
 			Clip audio = (Clip) params[1];
 			Clip out = (Clip) params[2];
-			float durationPerSlide = (Float) params[3];
+			String watermask = (String) params[3];
+			float durationPerSlide = (Float) params[4];
+			final String finalpath = out.path;
 			try {
-				mFfmpegController.createSlideshowFromImagesAndAudio(images, audio, out, durationPerSlide, new ShellCallback(){
+				Clip tmp = mFfmpegController.createSlideshowFromImagesAndAudio(images, audio, watermask, out, durationPerSlide, new ShellCallback(){
 
 					@Override
 					public void shellOut(String shellLine) {
@@ -134,6 +143,7 @@ public class SlideShowMaker {
 						}
 					}
 				});
+				StoreDataUtil.copyFile(tmp.path, finalpath);
 			} catch (Exception e) {
 				Log.v("Ffmpeghello", "Exception");
 				e.printStackTrace();
@@ -150,6 +160,7 @@ public class SlideShowMaker {
 
 		@Override
 		protected void onProgressUpdate(Integer... values) {
+			progressFragment.sendSuccessMessage();
 			super.onProgressUpdate(values);
 		}
 		

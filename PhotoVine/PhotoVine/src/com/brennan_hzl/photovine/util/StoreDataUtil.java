@@ -1,9 +1,11 @@
 package com.brennan_hzl.photovine.util;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -30,6 +32,37 @@ public class StoreDataUtil {
 		    e.printStackTrace();
 		}
 	}
+	
+	public static boolean copyFile(String oldPath, String newPath) {
+	       boolean isok = true;
+	       try {
+	           int byteread = 0;
+	           File oldfile = new File(oldPath);
+	           if (oldfile.exists()) { 
+	               InputStream inStream = new FileInputStream(oldPath); 
+	               FileOutputStream fs = new FileOutputStream(newPath);
+	               byte[] buffer = new byte[1024];
+
+	               while ( (byteread = inStream.read(buffer)) != -1) {
+	                   fs.write(buffer, 0, byteread);
+	               }
+	               fs.flush();
+	               fs.close();
+	               inStream.close();
+	           }
+	           else
+	           {
+	            isok = false;
+	           }
+	       }
+	       catch (Exception e) {
+	          e.printStackTrace();
+	          isok = false;
+	       }
+	       return isok;
+	 
+	   } 
+		
 	
 	public static File getTempPathOfAppInternalStorage(Context context) {
 	    String str = context.getApplicationContext().getFilesDir().getAbsolutePath() + File.separator + "temp";

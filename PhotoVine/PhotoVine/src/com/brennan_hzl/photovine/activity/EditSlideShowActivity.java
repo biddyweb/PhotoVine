@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.ffmpeg.android.Clip;
 import org.ffmpeg.android.FfmpegController;
@@ -57,7 +58,7 @@ public class EditSlideShowActivity extends FragmentActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_slideshow);
-		mMaker = new SlideShowMaker(getApplicationContext(), mImages);
+		mMaker = new SlideShowMaker(this, mImages);
 		getSupportFragmentManager().addOnBackStackChangedListener(new OnBackStackChangedListener() {
 			
 			@Override
@@ -101,7 +102,8 @@ public class EditSlideShowActivity extends FragmentActivity {
 	}
 	
 	public void goAhead(View v) {
-		mMaker.createSlideShow();
+		String videoPath = StoreDataUtil.getPathOfStoreSlideShow(this).getAbsolutePath()+File.separator+"PhotoVine"+ new Random(6).nextLong()+".mp4"; 
+		mMaker.createSlideShow(videoPath,1);
 	}
 	
 	public void setItemDuration(boolean isAuto) {
@@ -161,9 +163,14 @@ public class EditSlideShowActivity extends FragmentActivity {
 				break;	
 			}
 			
-			
 		}
 		
+	}
+
+	@Override
+	protected void onDestroy() {
+		StoreDataUtil.clearTempFileOfAppInternalStorage(this);
+		super.onDestroy();
 	}
 	
 }

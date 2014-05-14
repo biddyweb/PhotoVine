@@ -60,10 +60,11 @@ public class DurationFragment extends Fragment {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				((EditSlideShowActivity)getActivity()).setItemDuration(isChecked);
+				mWheel.setEnabled(!isChecked);
 			}
 		});
 		mWheel = (Wheel) view.findViewById(R.id.wheel);
-		mWheel.setValue((duration*10-45)/45, true);
+		mWheel.setValue((duration*10-55)/45, true);
 		mWheel.setOnScrollListener( new OnScrollListener() {
 
 	        @Override
