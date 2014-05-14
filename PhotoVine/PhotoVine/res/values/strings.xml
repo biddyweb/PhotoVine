@@ -10,4 +10,22 @@
     <string name="title_crop_image">Crop Image</string>
     <string name="title_edit_image">Edit Image</string>
     <string name="title_edit_slideshow">Edit SlideShow</string>
+    
+	<string name="onloading">onLoading...</string>
+    <string name="less_than_one">less than one</string>
+	
+    <string name="choose_music">Choose Music</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="duration_per_image">%ss per image</string>
+    <string name="add_title">Title</string>
+    <string name="add_watermask">Watermask</string>
+    <string name="show_duration"> photos|%ss per photo</string>
+    <string name="auto_instagram">Auto time for Instagram</string>
+    <string name="photo_processing">Photo Processing</string>
+    
+    <string name="add_text">Text</string>
+    <string name="change_duration">Duration</string>
+    <string name="add_music">Music</string>
+    <string name="add_effect">Effect</string>
 </resources>

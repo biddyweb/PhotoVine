@@ -12,10 +12,16 @@ import org.ffmpeg.android.ShellUtils.ShellCallback;
 
 import com.brennan_hzl.photovine.R;
 import com.brennan_hzl.photovine.bean.ImageBean;
+import com.brennan_hzl.photovine.bean.MusicBean;
 import com.brennan_hzl.photovine.bean.SelectedImageBean;
+import com.brennan_hzl.photovine.fragment.ChooseMusicFragment;
+import com.brennan_hzl.photovine.fragment.DurationFragment;
+import com.brennan_hzl.photovine.fragment.TitleFragment;
 import com.brennan_hzl.photovine.util.AnimationClip;
 import com.brennan_hzl.photovine.util.Sconstants;
+import com.brennan_hzl.photovine.util.SlideShowMaker;
 import com.brennan_hzl.photovine.util.StoreDataUtil;
+import com.brennan_hzl.photovine.util.TiltEffectAttacher;
 import com.brennan_hzl.photovine.view.SlideShowView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
@@ -25,164 +31,140 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-public class EditSlideShowActivity extends Activity {
+public class EditSlideShowActivity extends FragmentActivity {
 
+	private SlideShowMaker mMaker;
 	private SlideShowView mPlayer;
-	private ImageLoader mImageLoader = ImageLoader.getInstance();
 	private ProgressDialog mProgressDialog;
+	private View buttonDuration;
+	private View buttonText;
+	private View buttonMusic;
+	private View buttonEffect;
+	private boolean editState = false;
 	private List<ImageBean> mImages = SelectedImageBean.getInstance().getChoosedImages();
-	private FfmpegController mFfmpegController;
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_slideshow);
+		mMaker = new SlideShowMaker(getApplicationContext(), mImages);
+		getSupportFragmentManager().addOnBackStackChangedListener(new OnBackStackChangedListener() {
+			
+			@Override
+			public void onBackStackChanged() {
+				editState = !editState;
+			}
+		});
 		initView();
-		initFfmpeg();
-		
 	}
-	
-	private void initFfmpeg() {
-		try {
-			mFfmpegController = new FfmpegController(this, StoreDataUtil.getTempPathOfAppInternalStorage(this));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
+	@Override
+	protected void onResume() {
+		mPlayer.setSlideShowMaker(mMaker);
+		super.onResume();
 	}
 
 	private void initView() {
-		initPlay();
-		initTitle();
-	}
-
-	private void initPlay() {
 		mPlayer = (SlideShowView) findViewById(R.id.slideshow_player);
-		mPlayer.setTranslation(getTranslations());
-	}
-
-	private List<AnimationClip> getTranslations() {
-		Animation anim = new TranslateAnimation(0f,0f,0f,0f);
-		anim.setDuration(1000);
-		anim.setFillAfter(true);
-		ImageSize size= new ImageSize(getResources().getDisplayMetrics().widthPixels, getResources().getDisplayMetrics().widthPixels);
-		List<AnimationClip> clips = new ArrayList<AnimationClip>();
-		for (ImageBean image : mImages) {
-			AnimationClip clip = new AnimationClip();
-			clip.uri = image.imageUri;
-			clip.targetImageSize = size;
-			clip.anim = anim;
-			clips.add(clip);
-		}
-		return clips;
-	}
-
-	private void initTitle() {
+		
 		((TextView)findViewById(R.id.navigation_title)).setText(R.string.title_edit_slideshow);
+		
+		buttonDuration = findViewById(R.id.change_duration);
+		buttonText = findViewById(R.id.add_text);
+		buttonMusic = findViewById(R.id.add_music);
+		buttonEffect = findViewById(R.id.add_effect);
+		OnClickListener listener = new ToolClickListener();
+		buttonDuration.setOnClickListener(listener);
+		buttonText.setOnClickListener(listener);
+		buttonMusic.setOnClickListener(listener);
+		buttonEffect.setOnClickListener(listener);
+		
+		TiltEffectAttacher.attach(buttonDuration);
+		TiltEffectAttacher.attach(buttonText);
+		TiltEffectAttacher.attach(buttonMusic);
+		TiltEffectAttacher.attach(buttonEffect);
 	}
+
 	
 	public void goBack(View v) {
 		finish();
 	}
 	
 	public void goAhead(View v) {
-		mProgressDialog = ProgressDialog.show(this, null, getString(R.string.onloading));
-		ArrayList<Clip> images = new ArrayList<Clip>();
-		for (ImageBean value : mImages) {
-			Clip image = new Clip(value.imagePath);
-			images.add(image);
+		mMaker.createSlideShow();
+	}
+	
+	public void setItemDuration(boolean isAuto) {
+		if (isAuto) {
+			setItemDuration(15.0f/mImages.size());
+		} else {
+			setItemDuration(1.0f);
 		}
-		if (StoreDataUtil.getPathOfStoreSlideShow(this) == null)
-			return;
-		Clip out = new Clip(StoreDataUtil.getPathOfStoreSlideShow(this).getAbsolutePath()+File.separator+"hello.mp4");
-		out.width = 640;
-		out.height = 640;
-		//out.qscale = "5";
-		if (mFfmpegController != null) {
-			new CreateSlideShowAsyncTask().execute(images,null,out,1);
+	}
+	
+	public void setItemDuration(float duration) {
+		if (mPlayer.isShowing()) {
+			mPlayer.stop();
 		}
+		mMaker.setDurationPerImage(duration);
+		mPlayer.setDurationPerImage(duration);
+	}
+	
+	public void setTitleAndWatermask(String title, String watermask) {
+		mMaker.setTitleAndWatermask(title, watermask);
+		mPlayer.setTitleAndWatermask(title, watermask);
+	}
+	
+	public void setMusic(MusicBean music) {
 		
 	}
 	
-	private class CreateSlideShowAsyncTask extends AsyncTask<Object, Integer, Void> {
+	private class ToolClickListener implements OnClickListener {
 
 		@Override
-		protected Void doInBackground(Object... params) {
-			@SuppressWarnings("unchecked")
-			ArrayList<Clip> images = (ArrayList<Clip>) params[0];
-			Clip audio = (Clip) params[1];
-			Clip out = (Clip) params[2];
-			int durationPerSlide = (Integer) params[3];
-			try {
-				mFfmpegController.createSlideshowFromImagesAndAudio(images, audio, out, durationPerSlide, new ShellCallback(){
-
-					@Override
-					public void shellOut(String shellLine) {
-						Log.v("Ffmpeghello", "Shellout:"+shellLine);
-					}
-
-					@Override
-					public void processComplete(int exitValue) {
-						if (exitValue == 843133702) {
-							publishProgress(100);
-						}
-					}
-				});
-			} catch (Exception e) {
-				Log.v("Ffmpeghello", "Exception");
-				e.printStackTrace();
-			} finally {
-				StoreDataUtil.clearTempFileOfAppInternalStorage(getApplicationContext());
+		public void onClick(View v) {
+			if (editState) { 
+				return;
 			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void result) {
-			super.onPostExecute(result);
-		}
-
-		@Override
-		protected void onProgressUpdate(Integer... values) {
-			mProgressDialog.dismiss();
-			super.onProgressUpdate(values);
+			Fragment newFragment;
+			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+			transaction.setCustomAnimations(
+	                R.anim.slide_bottom_in,
+	                R.anim.no_anim,
+	                R.anim.no_anim,
+	                R.anim.slide_up_out);
+			
+			switch (v.getId()) {
+			case R.id.change_duration:
+				newFragment = new DurationFragment();
+				transaction.add(R.id.fragment_container, newFragment);
+				transaction.addToBackStack(null);
+				transaction.commit();
+				break;
+			case R.id.add_text:
+				newFragment = new TitleFragment();
+				transaction.add(R.id.fragment_container, newFragment);
+				transaction.addToBackStack(null);
+				transaction.commit();
+				break;
+			default:
+				break;	
+			}
+			
+			
 		}
 		
 	}
 	
-	private void combine() {
-	    Clip tmp1 = new Clip(StoreDataUtil.getPathOfStoreSlideShow(this).getAbsolutePath()+File.separator+"hello1.mp4");
-	    Clip tmp2 = new Clip(StoreDataUtil.getPathOfStoreSlideShow(this).getAbsolutePath()+File.separator+"hello.mp4");
-	    ArrayList<Clip> videos = new ArrayList<Clip>();
-	    videos.add(tmp1);
-	    videos.add(tmp2);
-	    Clip out = new Clip(StoreDataUtil.getPathOfStoreSlideShow(this).getAbsolutePath()+File.separator+"hello2.mp4");
-		try {
-			mFfmpegController.concatAndTrimFilesMP4Stream(videos, out, true, false, new ShellCallback(){
-
-				@Override
-				public void shellOut(String shellLine) {
-					// TODO Auto-generated method stub
-					
-				}
-
-				@Override
-				public void processComplete(int exitValue) {
-					// TODO Auto-generated method stub
-					
-				}
-			
-			});
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 }
 

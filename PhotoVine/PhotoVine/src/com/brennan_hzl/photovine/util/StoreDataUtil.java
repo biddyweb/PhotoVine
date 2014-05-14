@@ -39,13 +39,29 @@ public class StoreDataUtil {
 	    return tmp;
 	}
 	
+	public static File getTempImagePathOfAppInternalStorage(Context context) {
+	    String str = context.getApplicationContext().getFilesDir().getAbsolutePath() + File.separator + "temp" + File.separator +"images";
+	    File tmp = new File(str);
+	    if (!tmp.exists())
+	    	tmp.mkdirs();
+	    return tmp;
+	}
+	
+	public static File getTempMusicPathOfAppInternalStorage(Context context) {
+	    String str = context.getApplicationContext().getFilesDir().getAbsolutePath() + File.separator + "temp" + File.separator +"music";
+	    File tmp = new File(str);
+	    if (!tmp.exists())
+	    	tmp.mkdirs();
+	    return tmp;
+	}
+	
 	public static File getPathOfStoreSlideShow(Context context) {
 		if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
-			Toast.makeText(context, "‘›ŒﬁÕ‚≤ø¥Ê¥¢", Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "waibucunchu", Toast.LENGTH_SHORT).show();
 			return null;
 		}
 		String externalStoragePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-		File tmp = new File(externalStoragePath,"photoVine");
+		File tmp = new File(externalStoragePath, "photoVine");
 		if (!tmp.exists())
 	    	tmp.mkdir();
 	    return tmp;

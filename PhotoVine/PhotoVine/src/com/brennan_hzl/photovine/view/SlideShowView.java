@@ -6,10 +6,12 @@ import java.util.List;
 import com.brennan_hzl.photovine.R;
 import com.brennan_hzl.photovine.util.AnimationClip;
 import com.brennan_hzl.photovine.util.Sconstants;
+import com.brennan_hzl.photovine.util.SlideShowMaker;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -17,8 +19,9 @@ import android.view.animation.Animation.AnimationListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-public class SlideShowView extends RelativeLayout {
+public class SlideShowView extends SquareLayout {
 
 	//private int durationPerImage = 1000; //1 second
 	private ImageLoader imageLoader = ImageLoader.getInstance();
@@ -28,6 +31,11 @@ public class SlideShowView extends RelativeLayout {
 	private ImageView currentImage;
 	private ImageView nextImage;
 	private ImageButton btnPlay;
+	private TextView showDuration;
+	private TextView Title;
+	private TextView Watermark;
+	private SlideShowMaker mMaker;
+	private float durationPerImage = 1.0f;
 	private int currentId = 0;
 	
 	public SlideShowView(Context context) {
@@ -47,32 +55,28 @@ public class SlideShowView extends RelativeLayout {
 	
 	@SuppressWarnings("deprecation")
 	private void init() {
-		currentImage = new ImageView(getContext());
-		nextImage = new ImageView(getContext());
-		currentImage.setAdjustViewBounds(true);
-		currentImage.setClickable(false);
-		currentImage.setFocusable(false);
-		nextImage.setAdjustViewBounds(true);
-		nextImage.setClickable(false);
-		nextImage.setFocusable(false);
-		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		addView(nextImage, lp);
-		addView(currentImage, lp);
+		View view = LayoutInflater.from(getContext()).inflate(R.layout.layout_slideshowview, this);
+		currentImage = (ImageView) view.findViewById(R.id.current_image);
+		nextImage = (ImageView) view.findViewById(R.id.next_image);
 		
-		btnPlay = new ImageButton(getContext());
-		btnPlay.setImageDrawable(getContext().getResources().getDrawable(R.drawable.btn_slideshow_play));
-		btnPlay.setBackgroundDrawable(null);
-		LayoutParams lpb = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		lpb.addRule(CENTER_IN_PARENT, TRUE);
-		addView(btnPlay, lpb);
+		
+		
+		Title = (TextView) view.findViewById(R.id.text_title);
+		Watermark = (TextView) view.findViewById(R.id.text_watermask);
+		
+		
+		
+		btnPlay = (ImageButton) view.findViewById(R.id.button_play);
 		btnPlay.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				btnPlay.setVisibility(GONE);
+				showDuration.setVisibility(GONE);
 				play();
 			}
 		});
+		showDuration = (TextView) view.findViewById(R.id.text_duration);
 		
 		setOnTouchListener(new OnTouchListener() {
 			
@@ -85,6 +89,11 @@ public class SlideShowView extends RelativeLayout {
 		});
 	}
 
+	public void setDurationPerImage(float duration) {
+		durationPerImage = duration;
+		showDuration.setText(translationList.size()+String.format(getContext().getString(R.string.show_duration), Float.toString(durationPerImage)));
+	}
+	
 	private void setCoverImage() {
 		currentImage.setAdjustViewBounds(false);
 		//currentImage.setScaleType(ImageView.ScaleType.CENTER);
@@ -92,7 +101,19 @@ public class SlideShowView extends RelativeLayout {
 		currentImage.setImageBitmap(imageLoader.loadImageSync(fristClip.uri, fristClip.targetImageSize, Sconstants.options));
 	}
 	
-	public void setTranslation(List<AnimationClip> translations) {
+	public void setTitleAndWatermask(String title, String watermask) {
+		Title.setText(title);
+		Watermark.setText(watermask);
+	}
+	
+	public void setSlideShowMaker(SlideShowMaker maker) {
+		mMaker = maker;
+		setTranslation(mMaker.getTranslations());
+		showDuration.setText(translationList.size()+String.format(getContext().getString(R.string.show_duration), Float.toString(durationPerImage)));
+		setCoverImage();
+	}
+	
+	private void setTranslation(List<AnimationClip> translations) {
 		if (translations.size() == 0)
 			return;
 		translationList.clear();
@@ -131,13 +152,18 @@ public class SlideShowView extends RelativeLayout {
 		nextImage.clearAnimation();
 		currentId = 0;
 		btnPlay.setVisibility(VISIBLE);
+		showDuration.setVisibility(VISIBLE);
 		setCoverImage();
 	}
 	
 	public void play() {
+		if (mMaker != null) {
+			setTranslation(mMaker.getTranslations());
+		}
 		if (translationList.size() == 0 || isShowing)
 			return;
 		isShowing = true;
+		currentId = 0;
 		playSlideShow();
 	}
 	
@@ -150,7 +176,7 @@ public class SlideShowView extends RelativeLayout {
 		}
 		AnimationClip clip = translationList.get(currentId);
 		currentImage.setImageBitmap(imageLoader.loadImageSync(clip.uri, clip.targetImageSize, Sconstants.options));
-		currentImage.startAnimation(clip.anim);
+		
 		clip.anim.setAnimationListener(new AnimationListener() {
 			
 			@Override
@@ -172,6 +198,8 @@ public class SlideShowView extends RelativeLayout {
 				}
 			}
 		});
+		
+		currentImage.startAnimation(clip.anim);
 	}
 
 	protected void transfer() {
@@ -184,7 +212,9 @@ public class SlideShowView extends RelativeLayout {
 		
 	}
 	
-	
+	public boolean isShowing() {
+		return isShowing;
+	}
 	
 
 }

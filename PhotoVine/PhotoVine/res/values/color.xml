@@ -7,6 +7,9 @@
 	<color name="no_item">#333333</color>
 	<color name="text_color">#fff2f2f2</color>
 	<color name="none_color">#00000000</color>
+	<color name="text_link">#33628B</color>
+	<color name="common_text_color">#ff515151</color>
+	<color name="bg_edit_slideshow">#CDCDC1</color>
 	
 	<color name="photo_placeholder_bg_color0">#5F9FDF</color>
     <color name="photo_placeholder_bg_color1">#6FCF6E</color>

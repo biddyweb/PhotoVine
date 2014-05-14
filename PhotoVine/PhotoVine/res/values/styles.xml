@@ -33,4 +33,26 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerInParent">true</item>
     </style>
+    
+    <style name="AlertDialogTitle">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/text_link</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">16dip</item>
+        <item name="android:paddingTop">15dip</item>
+        <item name="android:paddingBottom">14dip</item>
+    </style>
+    
+    <style name="AlertDialogDivider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dip</item>
+        <item name="android:background">@color/text_link</item>
+    </style>
+    
+    
+    <style name="FragmentBackButton">
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginTop">5dp</item>
+    </style>
 </resources>

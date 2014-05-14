@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.brennan_hzl.photovine.R;
 import com.brennan_hzl.photovine.bean.AlbumBean;
 import com.brennan_hzl.photovine.bean.ImageBean;
 
@@ -69,11 +70,10 @@ public class AlbumInfoLoader {
 	
 	private void getAlbums() {
 		if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
-			Toast.makeText(mContext, "暂无外部存储", Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, R.string.onloading, Toast.LENGTH_SHORT).show();
 			mHandler.sendEmptyMessage(SCAN_FAIL);
 		}
 		
-		//显示进度条
 		
 		new Thread(new Runnable() {
 			
@@ -83,7 +83,6 @@ public class AlbumInfoLoader {
 				ContentResolver mContentResolver = mContext.getContentResolver();
 
 				HashMap<String, List<ImageBean>> mGruopMap = new HashMap<String, List<ImageBean>>();
-				//只查询jpeg和png的图片
 				Cursor mCursor = mContentResolver.query(mImageUri, null,
 						MediaStore.Images.Media.MIME_TYPE + "=? or "
 								+ MediaStore.Images.Media.MIME_TYPE + "=? or "
@@ -91,16 +90,13 @@ public class AlbumInfoLoader {
 						new String[] { "image/jpeg", "image/png", "50000" }, MediaStore.Images.Media.DATE_MODIFIED);
 				
 				while (mCursor.moveToNext()) {
-					//获取图片的路径
 					String path = mCursor.getString(mCursor
 							.getColumnIndex(MediaStore.Images.Media.DATA));
 					
 					ImageBean imageBean = new ImageBean(path);
-					//获取该图片的父路径名
 					String parentName = new File(path).getParentFile().getName();
 
 					
-					//根据父路径名将图片放入到mGruopMap中
 					if (!mGruopMap.containsKey(parentName)) {
 						List<ImageBean> chileList = new ArrayList<ImageBean>();
 						chileList.add(imageBean);
@@ -111,7 +107,6 @@ public class AlbumInfoLoader {
 				}
 				mAlbums = subGroupOfImage(mGruopMap);
 				mCursor.close();
-				//通知Handler扫描图片完成
 				mHandler.sendEmptyMessage(SCAN_OK);
 				
 			}

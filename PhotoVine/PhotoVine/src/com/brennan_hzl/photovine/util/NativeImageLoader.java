@@ -142,7 +142,7 @@ public class NativeImageLoader {
 			int widthScale = Math.round((float) bitmapWidth / (float) viewWidth);
 			int heightScale = Math.round((float) bitmapHeight / (float) viewWidth);
 			
-			inSampleSize = widthScale < heightScale ? widthScale : heightScale;
+			inSampleSize = widthScale > heightScale ? widthScale : heightScale;
 		}
 		return inSampleSize;
 	}

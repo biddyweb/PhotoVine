@@ -8,11 +8,13 @@ import org.askerov.dynamicgid.DynamicGridView;
 import com.brennan_hzl.photovine.R;
 import com.brennan_hzl.photovine.adapter.DynamicAdapter;
 import com.brennan_hzl.photovine.bean.ImageBean;
+import com.brennan_hzl.photovine.fragment.ExcuteProgressFragment;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -24,7 +26,7 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class EditImageActivity extends Activity {
+public class EditImageActivity extends FragmentActivity {
 	private DynamicGridView mGridView;
 	private View mToolBar;
 	private List<ImageBean> list;
@@ -212,7 +214,8 @@ public class EditImageActivity extends Activity {
 	}
 	
 	public void goAhead(View v) {
-		startActivity(new Intent(this, EditSlideShowActivity.class));
+		new ExcuteProgressFragment().show(getSupportFragmentManager(), "Excute Photos");
+		//startActivity(new Intent(this, EditSlideShowActivity.class));
 	}
 }
 
