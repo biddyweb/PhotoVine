@@ -10,14 +10,19 @@ import org.ffmpeg.android.Clip;
 import org.ffmpeg.android.FfmpegController;
 import org.ffmpeg.android.ShellUtils.ShellCallback;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 
+import com.brennan_hzl.photovine.R;
 import com.brennan_hzl.photovine.activity.EditSlideShowActivity;
 import com.brennan_hzl.photovine.bean.ImageBean;
 import com.brennan_hzl.photovine.bean.MusicBean;
@@ -38,7 +43,7 @@ public class SlideShowMaker {
 	private float durationPerImage = 1.0f;
 	private List<ImageBean> mImages;
 	private String Title;
-	private String Watermask;
+	private String Watermask = "";
 	private MusicBean music;
 	private String musicStartTime;
 	private Context mContext;
@@ -95,6 +100,8 @@ public class SlideShowMaker {
 		progressFragment = MakeProgressFragment.createFragment(videoPath, shareType);
 		progressFragment.show(((EditSlideShowActivity)mContext).getSupportFragmentManager(), "makeSlidshow");
 		
+		createTitle();
+		
 		ArrayList<Clip> images = new ArrayList<Clip>();
 		for (ImageBean value : mImages) {
 			Clip image = new Clip(value.imagePath);
@@ -117,6 +124,27 @@ public class SlideShowMaker {
 		}
 	}
 	
+	@SuppressLint("ResourceAsColor")
+	private void createTitle() {
+		if (Title == null) {
+			return;
+		}
+		String path = StoreDataUtil.getTempImagePathOfAppInternalStorage(mContext).getAbsolutePath()+File.separator + "img001" + "." + Bitmap.CompressFormat.JPEG;
+		Bitmap bitmap = NativeImageLoader.decodeThumbBitmapForFile(path, 640, 640).copy(Bitmap.Config.ARGB_8888, true);
+		Rect bounds = new Rect(); 
+		Paint paint = new Paint();
+		Typeface font = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD);
+		paint.setTypeface(font);
+		paint.setColor(mContext.getResources().getColor(R.color.yellow));
+		paint.setTextSize(60);
+		paint.getTextBounds(Title,0, Title.length(), bounds);  
+		int width = bounds.width();
+		int height = bounds.height();
+		Canvas canvas = new Canvas(bitmap);
+		canvas.drawText(Title, 320-width/2, 320-height/2, paint);
+		StoreDataUtil.saveImgFileToAppInternalStorage(bitmap, path);
+	}
+
 	private class CreateSlideShowAsyncTask extends AsyncTask<Object, Integer, Void> {
 
 		@Override

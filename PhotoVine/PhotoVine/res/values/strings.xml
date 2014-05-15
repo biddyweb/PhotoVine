@@ -28,4 +28,10 @@
     <string name="change_duration">Duration</string>
     <string name="add_music">Music</string>
     <string name="add_effect">Effect</string>
+    
+    <string name="water_mark">WaterMark:</string>
+    <string name="instagram">Instagram</string>
+    <string name="face_book">Facebook</string>
+    <string name="save">Save</string>
+    <string name="share">Share</string>
 </resources>

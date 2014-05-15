@@ -21,7 +21,7 @@
         android:label="@string/app_name" 
         android:theme="@style/Theme.PhotoVine.NoActionBar">
         <activity
-            android:name=".activity.ChooseImageActivity"
+            android:name=".activity.WelcomeActivity"
             android:label="@string/app_name" 
             android:screenOrientation="portrait">
             <intent-filter>
@@ -30,7 +30,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
+        <activity 
+            android:name=".activity.ChooseImageActivity"
+            android:label="@string/app_name" 
+            android:screenOrientation="portrait">
+            
+        </activity>
         <activity 
             android:name=".activity.EditImageActivity"
             android:label="@string/app_name"

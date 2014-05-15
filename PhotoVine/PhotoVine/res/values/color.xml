@@ -2,6 +2,7 @@
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <color name="black_background">#000000</color>
+    <color name="white">#ffffffff</color>
 	<color name="yellow">#EEEE00</color>
 	<color name="bar_background">#00FF7F</color>
 	<color name="no_item">#333333</color>

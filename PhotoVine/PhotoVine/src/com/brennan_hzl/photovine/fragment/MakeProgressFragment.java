@@ -172,6 +172,7 @@ public class MakeProgressFragment extends DialogFragment implements OnClickListe
 		if (mThread.isAlive()) {
 	    	//mThread.stop(new InterruptedException());
 	    }
+		((EditSlideShowActivity)getActivity()).finish();
 	    dismiss();
 	    share();
 	}

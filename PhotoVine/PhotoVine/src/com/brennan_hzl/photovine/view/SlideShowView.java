@@ -10,6 +10,8 @@ import com.brennan_hzl.photovine.util.SlideShowMaker;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -174,6 +176,11 @@ public class SlideShowView extends SquareLayout {
 			stop();
 			return;
 		}
+		if (currentId == 0) {
+			Title.setVisibility(VISIBLE);
+		} else {
+			Title.setVisibility(INVISIBLE);
+		}
 		AnimationClip clip = translationList.get(currentId);
 		currentImage.setImageBitmap(imageLoader.loadImageSync(clip.uri, clip.targetImageSize, Sconstants.options));
 		
@@ -216,5 +223,4 @@ public class SlideShowView extends SquareLayout {
 		return isShowing;
 	}
 	
-
 }

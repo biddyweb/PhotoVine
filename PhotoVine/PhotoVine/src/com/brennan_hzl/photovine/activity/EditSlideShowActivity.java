@@ -17,6 +17,7 @@ import com.brennan_hzl.photovine.bean.MusicBean;
 import com.brennan_hzl.photovine.bean.SelectedImageBean;
 import com.brennan_hzl.photovine.fragment.ChooseMusicFragment;
 import com.brennan_hzl.photovine.fragment.DurationFragment;
+import com.brennan_hzl.photovine.fragment.ShareFragment;
 import com.brennan_hzl.photovine.fragment.TitleFragment;
 import com.brennan_hzl.photovine.util.AnimationClip;
 import com.brennan_hzl.photovine.util.Sconstants;
@@ -32,6 +33,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
@@ -47,8 +49,7 @@ import android.widget.TextView;
 public class EditSlideShowActivity extends FragmentActivity {
 
 	private SlideShowMaker mMaker;
-	private SlideShowView mPlayer;
-	private ProgressDialog mProgressDialog;
+	public SlideShowView mPlayer;
 	private View buttonDuration;
 	private View buttonText;
 	private View buttonMusic;
@@ -102,8 +103,12 @@ public class EditSlideShowActivity extends FragmentActivity {
 	}
 	
 	public void goAhead(View v) {
-		String videoPath = StoreDataUtil.getPathOfStoreSlideShow(this).getAbsolutePath()+File.separator+"PhotoVine"+ new Random(6).nextLong()+".mp4"; 
-		mMaker.createSlideShow(videoPath,1);
+		new ShareFragment().show(getSupportFragmentManager(), "ShareFragment");
+	}
+	
+	public void createSlideshow(int flag) {
+		String videoPath = StoreDataUtil.getPathOfStoreSlideShow(this).getAbsolutePath()+File.separator+"PhotoVine"+ System.currentTimeMillis()+".mp4";
+		mMaker.createSlideShow(videoPath,flag);
 	}
 	
 	public void setItemDuration(boolean isAuto) {

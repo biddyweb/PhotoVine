@@ -69,7 +69,7 @@ public class ChooseImageActivity extends Activity implements AlbumInfoResponeHan
 		if (GridViewState) {
 			switchGridView();
 		} else {
-			//go to welcomeActivity
+			finish();
 		}
 	}
 	
