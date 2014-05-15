@@ -10,7 +10,7 @@
         android:layout_width="fill_parent"
         android:layout_height="395dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/wa_a01" />
+        android:src="@drawable/wa_a02" />
     
     <ImageView
         android:id="@+id/ibViewSlideShow"
@@ -18,6 +18,6 @@
         android:layout_height="fill_parent"
         android:layout_below="@id/ibChoosePhoto"
         android:scaleType="centerCrop"
-        android:src="@drawable/wa_b02" />
+        android:src="@drawable/b05" />
 
 </RelativeLayout>
